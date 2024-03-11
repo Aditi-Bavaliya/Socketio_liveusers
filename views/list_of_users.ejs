@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Users </title>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        #one {
+    max-width: 600px; 
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #7b7777;
+    border-radius: 5px;
+    text-align: center;
+    background-color: rgb(255, 250, 250);
+}
+a{
+    color: blue;
+}
+
+body{
+    background-color: #f4f4f4 ;
+}
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fdfdfd;
+    border: 1px solid #000;
+    padding: 20px;
+    z-index: 9999;
+    box-shadow: #7b7777;
+  }
+.popup-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  font-family:Georgia, Times, 'Times New Roman', serif;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+button {
+    background-color: #151516;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+    
+    <div id="one">
+    <h1>Live Users</h1>
+    <ul>
+        <% Object.keys(active_users).forEach(id => { %>
+            <li> Name: <%= active_users[id] %> Socket ID: <a onclick="redirectToDetails('<%= id %>')"><%= id %> </a>  </li>
+        <% }); %>
+    </ul>
+    
+
+    <button id="button" onclick="logout()">logout</button>
+
+
+    <div id="popup" class="popup">
+        <button onclick="closePopup()">Close Details</button>
+        <h2>User Details in JSON form  </h2>
+        
+        <h4 id="jsonData"></h4>
+       
+      </div>
+    
+
+</div>
+    
+<script>
+    const socket = io();   
+    
+    function redirectToDetails(id){
+       socket.emit('fetch-data',id)
+       socket.on('user-details', function(user) {
+        console.log('Received user details:', user);
+        // Handle the received user details as needed
+
+
+
+    document.getElementById("jsonData").innerText = JSON.stringify(user, null, 2);
+    document.getElementById("popup").style.display = "block";
+});
+     
+
+
+}
+
+
+function closePopup() {
+  document.getElementById("popup").style.display = "none";
+} 
+function logout()
+{
+    window.location.href='/'
+}
+
+    </script>
+</body>
+</html>
