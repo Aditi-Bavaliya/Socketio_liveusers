@@ -1,0 +1,6 @@
+[build]
+  command = "npm run build"  # Adjust this based on your build command
+  publish = "dist"  
+  
+[build.environment]
+  NODE_VERSION = "14" 
